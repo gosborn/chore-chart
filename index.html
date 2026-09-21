@@ -97,6 +97,28 @@
   .reset-btn:active {
     transform: scale(0.96);
   }
+  .chore.secret {
+    display: none;
+  }
+  .chore.secret.revealed {
+    display: flex;
+  }
+  .secret-btn {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 56px;
+    height: 56px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    opacity: 0;
+    cursor: default;
+    z-index: 1001;
+  }
   .progress {
     margin-top: 18px;
     font-size: 18px;
@@ -150,6 +172,10 @@
       <div class="chore-left"><span class="emoji">💊</span><span class="label">Vitamins</span></div>
       <span class="star">⭐</span>
     </div>
+    <div class="chore secret" data-key="medicine">
+      <div class="chore-left"><span class="emoji">🥄</span><span class="label">Morning Medicine</span></div>
+      <span class="star">⭐</span>
+    </div>
     <div class="chore" data-key="diaper">
       <div class="chore-left"><span class="emoji">🧷</span><span class="label">Diaper</span></div>
       <span class="star">⭐</span>
@@ -184,7 +210,8 @@
     </div>
   </div>
 
-  <div class="progress" id="progress">0 / 10 done</div>
+  <button class="secret-btn" id="secretBtn" aria-hidden="true" tabindex="-1"></button>
+  <div class="progress" id="progress"></div>
   <button class="reset-btn" id="resetBtn">Reset Day</button>
   <canvas id="fireworks-canvas"></canvas>
   <div class="celebrate-text" id="celebrateText">🎉 All Done! 🎉</div>
@@ -265,10 +292,17 @@
     }, 4500);
   }
 
+  const secretChore = document.querySelector('.chore.secret');
+
+  function visibleChores() {
+    return Array.from(chores).filter(c => !c.classList.contains('secret') || c.classList.contains('revealed'));
+  }
+
   function updateProgress() {
-    const done = document.querySelectorAll('.chore.done').length;
-    progressEl.textContent = done + ' / ' + chores.length + ' done';
-    if (done === chores.length) {
+    const visible = visibleChores();
+    const done = visible.filter(c => c.classList.contains('done')).length;
+    progressEl.textContent = done + ' / ' + visible.length + ' done';
+    if (done === visible.length) {
       startFireworks();
     }
   }
@@ -284,6 +318,17 @@
     chores.forEach(c => c.classList.remove('done'));
     updateProgress();
   });
+
+  // Hidden button in the upper right corner: shows/hides the Morning Medicine chore.
+  document.getElementById('secretBtn').addEventListener('click', () => {
+    secretChore.classList.toggle('revealed');
+    if (!secretChore.classList.contains('revealed')) {
+      secretChore.classList.remove('done');
+    }
+    updateProgress();
+  });
+
+  updateProgress();
 </script>
 </body>
 </html>
