@@ -97,6 +97,21 @@
   .reset-btn:active {
     transform: scale(0.96);
   }
+  .section {
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #6b5f8f;
+    margin: 6px 0 -4px 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section .sec-emoji {
+    font-size: 20px;
+    letter-spacing: 0;
+  }
   .chore.secret {
     display: none;
   }
@@ -164,6 +179,7 @@
   <p class="sub">Tap a chore when it's done!</p>
 
   <div class="chart" id="chart">
+    <div class="section"><span class="sec-emoji">🏠</span>At Home</div>
     <div class="chore" data-key="breakfast">
       <div class="chore-left"><span class="emoji">🥣</span><span class="label">Breakfast</span></div>
       <span class="star">⭐</span>
@@ -204,7 +220,13 @@
       <div class="chore-left"><span class="emoji">👟</span><span class="label">Shoes</span></div>
       <span class="star">⭐</span>
     </div>
-    <div class="chore" data-key="school">
+    <div class="chore" data-key="outthedoor">
+      <div class="chore-left"><span class="emoji">🚪</span><span class="label">Out the Door</span></div>
+      <span class="star">⭐</span>
+    </div>
+
+    <div class="section"><span class="sec-emoji">🚌</span>After</div>
+    <div class="chore after" data-key="school">
       <div class="chore-left"><span class="emoji">🏫</span><span class="label">Go to School</span></div>
       <span class="star">⭐</span>
     </div>
@@ -293,18 +315,25 @@
   }
 
   const secretChore = document.querySelector('.chore.secret');
+  let wasComplete = false;
 
-  function visibleChores() {
-    return Array.from(chores).filter(c => !c.classList.contains('secret') || c.classList.contains('revealed'));
+  // The party is for finishing at home. "After" chores earn a star but don't gate it.
+  function homeChores() {
+    return Array.from(chores).filter(c =>
+      !c.classList.contains('after') &&
+      (!c.classList.contains('secret') || c.classList.contains('revealed'))
+    );
   }
 
   function updateProgress() {
-    const visible = visibleChores();
-    const done = visible.filter(c => c.classList.contains('done')).length;
-    progressEl.textContent = done + ' / ' + visible.length + ' done';
-    if (done === visible.length) {
+    const home = homeChores();
+    const done = home.filter(c => c.classList.contains('done')).length;
+    progressEl.textContent = done + ' / ' + home.length + ' done';
+    const complete = done === home.length;
+    if (complete && !wasComplete) {
       startFireworks();
     }
+    wasComplete = complete;
   }
 
   chores.forEach(c => {
