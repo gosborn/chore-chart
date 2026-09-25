@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Bedtime Chart</title>
+<link rel="stylesheet" href="chart.css">
+</head>
+<body>
+  <h1 id="title"></h1>
+  <p class="sub" id="sub"></p>
+
+  <div class="chart" id="chart"></div>
+
+  <button class="secret-btn" id="secretBtn" aria-hidden="true" tabindex="-1"></button>
+  <div class="progress" id="progress"></div>
+  <button class="reset-btn" id="resetBtn"></button>
+  <canvas id="fireworks-canvas"></canvas>
+  <div class="celebrate-text" id="celebrateText"></div>
+
+<script>
+window.CHART = {
+  title: '\u{1F319} My Bedtime Chart \u{1F319}',
+  subtitle: "Tap a chore when it's done!",
+  celebrate: '\u{1F319} Sweet Dreams! \u{1F319}',
+  resetLabel: 'Reset Night',
+  bodyClass: 'night',
+  sections: [
+    {
+      emoji: '\u{1F306}', label: 'Evening', counts: true,
+      chores: [
+        { key: 'gethome',   emoji: '\u{1F3E1}', label: 'Get Home' },
+        { key: 'play1',     emoji: '\u{1F9F8}', label: 'Play' },
+        { key: 'dinner',    emoji: '\u{1F37D}️', label: 'Dinner' },
+        { key: 'play2',     emoji: '\u{1F9F8}', label: 'Play' },
+        { key: 'readbooks', emoji: '\u{1F4DA}', label: 'Read Books' }
+      ]
+    },
+    {
+      emoji: '\u{1F319}', label: 'Lights Out', counts: false,
+      chores: [
+        { key: 'bedtime', emoji: '\u{1F6CF}️', label: 'Bedtime' }
+      ]
+    }
+  ]
+};
+</script>
+<script src="chart.js"></script>
+</body>
+</html>
